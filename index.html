@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promposal</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            overflow: hidden;
+            background-image: url('https://media.istockphoto.com/id/865884812/photo/science-fiction-space-wallpaper-incredibly-beautiful-planets-galaxies-dark-and-cold-beauty-of.jpg?s=612x612&w=0&k=20&c=JI6MmXNSCDKpnbLJNjbHX-QE1okdAJG2kY_W8UWmDIE='); /* Replace with a high-resolution NASA image URL */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        /* Blurred overlay effect */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0.5;
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+        
+        #question {
+            font-size: 32px;
+            margin-top: 50px;
+        }
+        #buttons {
+            margin-top: 20px;
+        }
+        .btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        #yes {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #no {
+            background-color: #FF5733;
+            color: white;
+            position: absolute;
+        }
+        #celebration-text {
+            font-size: 32px;
+            color: #FFD700;
+            font-weight: bold;
+            display: none;
+            margin-top: 20px;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            opacity: 0.8;
+            border-radius: 50%;
+            animation: fall 2s ease-out forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(100vh) scale(1.5); opacity: 0; }
+        }
+        #signature {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #FFD700;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <p id="question">Will you launch into prom with me?</p>
+    <div id="buttons">
+        <button id="yes" class="btn" onclick="celebrate()">Yes!</button>
+        <button id="no" class="btn" onmouseover="moveNo()">No</button>
+    </div>
+    <p id="celebration-text">Yay! Can't wait for prom!</p>
+    <p id="signature">- Elijah Buckwalter</p>
+    
+    <script>
+        function celebrate() {
+            document.getElementById("celebration-text").style.display = "block";
+            launchConfetti();
+            setTimeout(() => {
+                window.location.href = "mailto:elijahbuckwalter@gmail.com?subject=Prom%20Response&body=Yes!%20I'd%20love%20to%20go%20to%20prom!";
+            }, 500);
+        }
+        
+        function moveNo() {
+            let btn = document.getElementById("no");
+            let x = Math.random() * (window.innerWidth - 100);
+            let y = Math.random() * (window.innerHeight - 50);
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        }
+        
+        function launchConfetti() {
+            for (let i = 0; i < 50; i++) {
+                let confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = `${Math.random() * window.innerWidth}px`;
+                confetti.style.top = `${Math.random() * window.innerHeight / 2}px`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+    </script>
+</body>
+</html>
