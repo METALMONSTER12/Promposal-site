@@ -129,6 +129,15 @@
             opacity: 1;
             z-index: 3;
         }
+		
+		.shooting-star, .fast-star {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform, opacity;
+}
     </style>
 </head>
 <body>
@@ -155,90 +164,88 @@
         }, 3000);
 
         function generateShootingStars() {
-            setInterval(() => {
-                if (Math.random() < 0.6) return; // 40% chance to create a star (less frequent)
+    setInterval(() => {
+        if (Math.random() < 0.6) return;
 
-                let star = document.createElement("div");
-                star.className = "shooting-star";
-
-                // Random size (big = slow, small = fast)
-                let size = Math.random() * 6 + 4;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-
-                // Random starting position anywhere in the upper half of the screen
-                let startX = Math.random() * window.innerWidth;
-                let startY = Math.random() * window.innerHeight * 0.5;
-
-                // Random end position (ensuring downward movement)
-                let endX = startX + (Math.random() * 600 - 300);
-                let endY = startY + (Math.random() * 300 + 150);
-
-                // Speed logic: Bigger stars move slower
-                let duration = size > 6 ? 3.5 : 1.8;
-                
-                // Add 1.5 seconds to the duration
-                duration += 1.5;
-
-                // Apply animation dynamically
-                star.style.animationDuration = `${duration}s`;
-                star.style.animationName = `move${Date.now()}`;
-                let styleSheet = document.styleSheets[0];
-                styleSheet.insertRule(`
-                    @keyframes move${Date.now()} {
-                        0% { transform: translate(0, 0) scale(1); opacity: 1; }
-                        100% { transform: translate(${endX - startX}px, ${endY - startY}px) scale(0.3); opacity: 0; }
-                    }
-                `, styleSheet.cssRules.length);
-
-                star.style.left = `${startX}px`;
-                star.style.top = `${startY}px`;
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), duration * 1100);
-            }, 1200); // Less frequent shooting stars
-        }
+        let star = document.createElement("div");
+        star.className = "shooting-star";
         
-        function generateFastStars() {
-            setInterval(() => {
-                if (Math.random() < 0.85) return; // Only 15% chance to create a fast star (rarer)
-                
-                let fastStar = document.createElement("div");
-                fastStar.className = "fast-star";
-                
-                // Fast stars are thinner but longer (like streaks)
-                let width = Math.random() * 80 + 120; // 120-200px length
-                fastStar.style.width = `${width}px`;
-                
-                // Random starting position
-                let startX = -width; // Start from left of screen
-                let startY = Math.random() * window.innerHeight * 0.8;
-                
-                // Always go from left to right
-                let endX = window.innerWidth + width; // End right of screen
-                
-                // Very fast movement
-                let duration = Math.random() * 0.5 + 0.3; // 0.3-0.8 seconds (extremely fast)
-                
-                // Create unique keyframe animation
-                let animName = `fastMove${Date.now()}`;
-                let styleSheet = document.styleSheets[0];
-                styleSheet.insertRule(`
-                    @keyframes ${animName} {
-                        0% { transform: translateX(0) rotate(${Math.random() * 10 - 5}deg); opacity: 0; }
-                        10% { opacity: 1; }
-                        90% { opacity: 1; }
-                        100% { transform: translateX(${endX - startX}px) rotate(${Math.random() * 10 - 5}deg); opacity: 0; }
-                    }
-                `, styleSheet.cssRules.length);
-                
-                fastStar.style.left = `${startX}px`;
-                fastStar.style.top = `${startY}px`;
-                fastStar.style.animation = `${animName} ${duration}s linear`;
-                
-                document.body.appendChild(fastStar);
-                setTimeout(() => fastStar.remove(), duration * 1000 + 100);
-            }, 2000); // Check every 2 seconds for a new fast star
-        }
+        // Ensure white color with inline styles
+        star.style.backgroundColor = "white";
+        star.style.boxShadow = "0 0 20px white";
+        
+        // Random size
+        let size = Math.random() * 6 + 4;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        // Position calculation
+        let startX = Math.random() * window.innerWidth;
+        let startY = Math.random() * window.innerHeight * 0.5;
+        let moveX = Math.random() * 600 - 300;
+        let moveY = Math.random() * 300 + 150;
+        
+        // Set initial position
+        star.style.left = `${startX}px`;
+        star.style.top = `${startY}px`;
+        
+        // Duration calculation
+        let duration = size > 6 ? 5.0 : 3.3; // Increased duration
+        
+        // Use a simpler animation approach
+        let animName = `move${Date.now()}`;
+        let styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(`
+            @keyframes ${animName} {
+                0% { transform: translate(0, 0); opacity: 1; }
+                100% { transform: translate(${moveX}px, ${moveY}px); opacity: 0; }
+            }
+        `, styleSheet.cssRules.length);
+        
+        star.style.animation = `${animName} ${duration}s linear forwards`;
+        
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), duration * 1000 + 100);
+    }, 1200);
+}
+        
+       function generateFastStars() {
+    setInterval(() => {
+        if (Math.random() < 0.85) return;
+        
+        let fastStar = document.createElement("div");
+        fastStar.className = "fast-star";
+        
+        // Ensure white color with inline styles
+        fastStar.style.backgroundColor = "white";
+        fastStar.style.boxShadow = "0 0 15px 3px rgba(255, 255, 255, 0.9)";
+        
+        // Size and position
+        let width = Math.random() * 80 + 120;
+        fastStar.style.width = `${width}px`;
+        fastStar.style.height = "2px";
+        
+        let startY = Math.random() * window.innerHeight * 0.8;
+        fastStar.style.top = `${startY}px`;
+        fastStar.style.left = "-200px"; // Start off-screen
+        
+        // Simpler animation
+        fastStar.style.transition = "transform 0.8s linear, opacity 0.8s linear";
+        fastStar.style.opacity = "0";
+        
+        // Add to DOM
+        document.body.appendChild(fastStar);
+        
+        // Trigger animation with a small delay
+        setTimeout(() => {
+            fastStar.style.opacity = "1";
+            fastStar.style.transform = `translateX(${window.innerWidth + 200}px)`;
+        }, 10);
+        
+        // Remove after animation
+        setTimeout(() => fastStar.remove(), 900);
+    }, 2000);
+}
     </script>
 </body>
 </html>
